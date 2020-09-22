@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <input class="" id="inputBox"></input>
+    <span id="spanBox"></span>
+    <br/>
+    <input id="inputBox1"></input>
+    <span id="spanBox1"></span>
+  <script>
+    let obj ={
+      name:'zdr'
+    }
+    let newObj = JSON.parse(JSON.stringify(obj));
+    /* vue 2.0  双向数据绑定原理 */
+    Object.defineProperty(obj,'name',{
+      get(){
+        return newObj.name;
+      },
+      set(val){
+        if(newObj.name==val) return;
+        newObj.name = val;
+        observe()
+      }
+    })
+    function observe(){
+      spanBox.innerHTML = obj.name;
+      inputBox.value = obj.name;
+    }
+    inputBox.oninput = function(){
+      obj.name = inputBox.value;
+    }
+    /* -------------------------------------------------- */
+    /* vue 3.0  双向数据绑定原理 */
+    let obj1 ={}
+    obj1 = new Proxy(obj1,{
+      get(target,prop){
+        return target[prop]
+      },
+      set(target,prop,value){
+        target[prop]=value
+        observe1()
+      }
+    })
+    function observe1(){
+      inputBox1.value = obj1.name
+      spanBox1.innerHTML = obj1.name
+    }
+    inputBox1.oninput = function(){
+      obj1.name = inputBox1.value
+    }
+  </script>
+  </body>
+</html>
